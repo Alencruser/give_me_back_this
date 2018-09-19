@@ -1,5 +1,5 @@
-var app=require('express');
-var express=app();
+var express=require('express');
+var app=express();
 var bodyparser=require('body-parser');
 var mysql = require('mysql');
 
@@ -11,14 +11,17 @@ var connection = mysql.createConnection({
   database : 'plugdj'
 });
 //Utilisation body parser
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyparser.urlencoded({ extended: false }));
 //declaration dossier public
 app.use(express.static('public'));
 //utilisation de ejs
 app.set('view engine', 'ejs');
 
 app.get('/',(req,res)=>{
-	res.render('')
+	res.render('index');
 });
 
+app.post('/',(req,res)=>{
+
+})
 app.listen(8080);
