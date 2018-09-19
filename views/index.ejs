@@ -6,20 +6,27 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 </head>
 <body>
+	<form action="/" method='POST'>
+		<input type="text" name="nom" id="nom">
+		<label for="nom">Nom de votre room</label>
+		<input type="text" name="description" id="desc">
+		<label for="desc">Description</label>
+		<button type="submit" class="btn btn-primary">Creer une room</button>
+	</form>
 	<% if (locals.rooms) { %>
 	<div class="card-group">
-		<% rooms.forEach(function(room){
+		<% rooms.forEach(function(room){%>
 			<div class="card">
 			<img class="card-img-top" src=".../100px180/" alt="Card image cap">
 			<div class="card-body">
-			<h5 class="card-title">{{room.name}}</h5>
-			<p class="card-text">{{room.description}}.</p>
+			<h5 class="card-title"><%=room.name%></h5>
+			<p class="card-text">future description</p>
 			</div>
 			<div class="card-footer">
-			<small class="text-muted">{{room.createdAt}}</small>
+			<small class="text-muted"><%=room.created_at%></small>
 			</div>
 			</div>
-		})%>
+		<%})%>
 	</div>
 	<% } %>
 

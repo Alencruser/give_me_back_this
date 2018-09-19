@@ -18,7 +18,14 @@ app.use(express.static('public'));
 app.set('view engine', 'ejs');
 
 app.get('/',(req,res)=>{
-	res.render('index');
+	var getRooms = "SELECT * FROM rooms";
+	connection.query(getRooms,function(error,results,fields){
+		if(error){
+			console.log(error);
+		}else if(results.length>0) {
+			res.render('index',{rooms:results})
+		}
+	});
 });
 
 app.post('/',(req,res)=>{
