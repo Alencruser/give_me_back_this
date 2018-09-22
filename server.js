@@ -2,6 +2,7 @@ let express=require('express');
 let app=express();
 let bodyparser=require('body-parser');
 let mysql = require('mysql');
+let session = require('express-session');
 
 //settings DB
 let connection = mysql.createConnection({
