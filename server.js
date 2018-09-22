@@ -3,22 +3,22 @@ let app=express();
 let bodyparser=require('body-parser');
 let mysql = require('mysql');
 
-//declaration DB
+//settings DB
 let connection = mysql.createConnection({
   host     : 'den1.mysql2.gear.host',
   user     : 'plugdj',
   password : 'Dz7x~JX~qgqj',
   database : 'plugdj'
 });
-//variable des rooms
+//stock date here 
 let rooms=[];
-//Utilisation body parser
+//Use of body-parser
 app.use(bodyparser.urlencoded({ extended: false }));
-//declaration dossier public
+//use of static folder
 app.use(express.static('public'));
-//utilisation de ejs
+//use of ejs template engine
 app.set('view engine', 'ejs');
-//Page accueil
+//Home page
 app.get('/',(req,res)=>{
 	let getRooms = "SELECT * FROM rooms";
 	connection.query(getRooms,(error,results,fields)=>{
@@ -34,7 +34,7 @@ app.get('/',(req,res)=>{
 		}
 	});
 });
-//Creation d'une room
+//Create a room
 app.post('/',(req,res)=>{
 	let name=req.body.name;
 	let description=req.body.description;
@@ -49,7 +49,7 @@ app.post('/',(req,res)=>{
 		}
 	})
 });
-//creation de compte
+//create an account
 app.post('/register',(req,res)=>{
 	let username=req.body.username;
 	let email=req.body.email;
@@ -66,10 +66,10 @@ app.post('/register',(req,res)=>{
 		}
 	});
 });
-//Connexion à un compte
+//Connect to an account
 app.post('/connect',(req,res)=>{
 	let username=req.body.pseudo;
 	let pass=req.body.pass;
 });
-//Ouverture du serveur sur le port suivant 
+//Opening the server on the following port
 app.listen(8080);
