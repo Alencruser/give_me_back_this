@@ -66,5 +66,10 @@ app.post('/register',(req,res)=>{
 		}
 	});
 });
+//Connexion à un compte
+app.post('/connect',(req,res)=>{
+	let username=req.body.pseudo;
+	let pass=req.body.pass;
+});
 //Ouverture du serveur sur le port suivant 
 app.listen(8080);
