@@ -20,9 +20,9 @@
 		</div>
 		<div class="right menu">
 			<% if (locals.username) { -%>
-			<a class="item"><button class="ui inverted red button">Se deconnecter</button></a>
-			<% }else { -%>
 			<a class="item"><button onClick="$('#room').modal('show');" class="ui inverted green button">Creer une room</button></a>
+			<a href="/logout" class="item"><button class="ui inverted red button">Se deconnecter</button></a>
+			<% }else { -%>
 			<a class="item"><button onClick="$('#connect').modal('show');" class="ui inverted blue button">Se connecter</button></a>
 			<a class="item"><button onClick="$('#register').modal('show');" class="ui inverted blue button">S'enregistrer</button></a>
 			<%}%>

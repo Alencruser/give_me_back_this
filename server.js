@@ -101,5 +101,15 @@ app.post('/connect',(req,res)=>{
 		}
 	});
 });
+//Logout part
+app.get('/logout',(req,res)=>{
+	req.session.destroy((err)=> {
+		if(err) {
+			console.log(err);
+		} else {
+			res.redirect('/');
+		}
+	});
+});
 //Opening the server on the following port
 app.listen(8080);
