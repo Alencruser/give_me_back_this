@@ -24,6 +24,7 @@ app.get('/',(req,res)=>{
 	connection.query(getRooms,(error,results,fields)=>{
 		if(error){
 			console.log(error);
+			let message=['erreur','Problème pour la récupération de rooms'];
 		}else if(results.length>0) {
 			results.forEach((bl)=>{
 				rooms.push(bl.created_at);
@@ -41,7 +42,9 @@ app.post('/',(req,res)=>{
 	connection.query(createRoom,(error,results,field)=>{
 		if(error){
 			console.log(error);
+			let message=['Erreur','Problème dans la création de room'];
 		}else {
+			let message='success,Room créée avec succès';
 			res.redirect('/');
 		}
 	})
@@ -55,7 +58,10 @@ app.post('/register',(req,res)=>{
 	connection.query(createAccount,(error,results,field)=>{
 		if(error){
 			console.log(error);
+			let message=['Erreur','Echec dans la creation de compte'];
+			res.redirect('/');
 		}else{
+			let message=['success','Compte bien crée'];
 			res.redirect('/');
 		}
 	});
