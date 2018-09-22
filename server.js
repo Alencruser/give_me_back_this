@@ -3,6 +3,8 @@ let app=express();
 let bodyparser=require('body-parser');
 let mysql = require('mysql');
 let session = require('express-session');
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
 //settings DB
 let connection = mysql.createConnection({
@@ -112,4 +114,6 @@ app.get('/logout',(req,res)=>{
 	});
 });
 //Opening the server on the following port
-app.listen(8080);
+http.listen(8080, function(){
+  console.log('listening on *:8080');
+});
