@@ -6,13 +6,17 @@ let session = require('express-session');
 
 //settings DB
 let connection = mysql.createConnection({
-  host     : 'den1.mysql2.gear.host',
-  user     : 'plugdj',
-  password : 'Dz7x~JX~qgqj',
-  database : 'plugdj'
+	host     : 'den1.mysql2.gear.host',
+	user     : 'plugdj',
+	password : 'Dz7x~JX~qgqj',
+	database : 'plugdj'
 });
 //stock date here 
 let rooms=[];
+//app use of express session
+app.use(session({secret: 'ssshhhhh'}));
+//The let we will use for keep session storage
+let sess;
 //Use of body-parser
 app.use(bodyparser.urlencoded({ extended: false }));
 //use of static folder
@@ -21,6 +25,7 @@ app.use(express.static('public'));
 app.set('view engine', 'ejs');
 //Home page
 app.get('/',(req,res)=>{
+	sess=req.session;
 	let getRooms = "SELECT * FROM rooms";
 	connection.query(getRooms,(error,results,fields)=>{
 		if(error){
@@ -31,7 +36,17 @@ app.get('/',(req,res)=>{
 				rooms.push(bl.created_at);
 			})
 			console.log(rooms[0]);
-			res.render('index',{rooms:results})
+			if(sess.username){
+				res.render('index',{rooms:results,username:sess.username});
+			}else{
+				res.render('index',{rooms:results});
+			}
+		}else{
+			if(sess.username){
+				res.render('index',{username:sess.username});
+			}else{
+				res.render('index');
+			}
 		}
 	});
 });
@@ -69,8 +84,22 @@ app.post('/register',(req,res)=>{
 });
 //Connect to an account
 app.post('/connect',(req,res)=>{
+	sess=req.session;
 	let username=req.body.pseudo;
 	let pass=req.body.pass;
+	let connectAccount=`SELECT pass FROM users WHERE username='${username}'`;
+	connection.query(connectAccount,(error,results,field)=>{
+		if(error){
+			console.log(error);
+		}else if(pass==results[0].pass){
+			console.log('authentication success');
+			sess.username=username;
+			res.redirect('/');
+		}else {
+			console.log('wrong pass');
+			res.redirect('/')
+		}
+	});
 });
 //Opening the server on the following port
 app.listen(8080);

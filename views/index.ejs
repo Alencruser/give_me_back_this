@@ -19,7 +19,7 @@
 			</a>
 		</div>
 		<div class="right menu">
-			<% if (locals.token) { -%>
+			<% if (locals.username) { -%>
 			<a class="item"><button class="ui inverted red button">Se deconnecter</button></a>
 			<% }else { -%>
 			<a class="item"><button onClick="$('#room').modal('show');" class="ui inverted green button">Creer une room</button></a>
