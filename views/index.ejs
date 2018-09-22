@@ -17,15 +17,15 @@
 		</div>
 		<div class="right menu">
 			<% if (locals.token) { -%>
-			<a href="" class="item"><button class="ui inverted red button">Se deconnecter</button></a>
+			<a class="item"><button class="ui inverted red button">Se deconnecter</button></a>
 			<% }else { -%>
-			<a class="item"><button onClick="$('.ui.mini.modal').modal('show');" class="ui inverted green button">Creer une room</button></a>
-			<a href="" class="item"><button class="ui inverted blue button">Se connecter</button></a>
-			<a href="" class="item"><button class="ui inverted blue button">S'enregistrer</button></a>
+			<a class="item"><button onClick="$('#room').modal('show');" class="ui inverted green button">Creer une room</button></a>
+			<a class="item"><button onClick="$('#connect').modal('show');" class="ui inverted blue button">Se connecter</button></a>
+			<a class="item"><button onClick="$('#register').modal('show');" class="ui inverted blue button">S'enregistrer</button></a>
 			<%}%>
 		</div>
 	</div>
-	<div class="ui mini modal">
+	<div class="ui mini modal" id="room">
 		<form action="/" method="POST">
 			<div class="ui big form">
 				<div class="field">
@@ -33,11 +33,47 @@
 					<input class="form-control" type="text" name="name" id="name">					
 				</div>
 				<div class="field">
-					<label>Description de votre Room</label>
+					<label for="description">Description de votre Room</label>
 					<textarea rows="2" name="description" id="description"></textarea>
 				</div>
 				<hr>
 				<button type="submit" class="ui blue big button">Creer une room</button></a>
+			</div>
+		</form>
+	</div>
+	<div class="ui mini modal" id="connect">
+		<form action="/connect" method="POST">
+			<div class="ui big form">
+				<div class="field">
+					<label for="pseudo">Pseudo</label>
+					<input type="text" name="pseudo" id="pseudo">					
+				</div>
+				<div class="field">
+					<label for="pass">Mot de passe</label>
+					<input type="password" name="pass" id="pass">
+				</div>
+				<hr>
+				<button type="submit" class="ui blue big button">Se connecter</button></a>
+			</div>
+		</form>
+	</div>
+	<div class="ui mini modal" id="register">
+		<form action="/register" method="POST">
+			<div class="ui big form">
+				<div class="field">
+					<label for="username">Pseudo</label>
+					<input class="form-control" type="text" name="username" id="username">					
+				</div>
+				<div class="field">
+					<label for="email">Email</label>
+					<input type="text" name="email" id="email">
+				</div>
+				<div class="field">
+					<label for="password">Mot de passe</label>
+					<input type="password" name="password" id="password">
+				</div>
+				<hr>
+				<button type="submit" class="ui blue big button">Creer un compte</button></a>
 			</div>
 		</form>
 	</div>
