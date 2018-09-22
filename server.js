@@ -66,4 +66,5 @@ app.post('/register',(req,res)=>{
 		}
 	});
 });
+//Ouverture du serveur sur le port suivant 
 app.listen(8080);
