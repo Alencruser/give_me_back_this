@@ -4,17 +4,18 @@
 	<meta charset="UTF-8">
 	<title>plug.dj</title>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.0/dist/semantic.min.css">
+	<link rel="stylesheet" href="custom.css">
 </head>
 <body class="container-fluid">
 	<% if (locals.message) { -%>
-		<div><p><%=message[0]%> : <%=message[1]%></p></div>
+	<div><p><%=message[0]%> : <%=message[1]%></p></div>
 	<% } -%>
 	<div class="ui inverted segment menu">
 		<div class="ui inverted secondary pointing menu">
-			<a class="active item">
+			<a href="/" class="item">
 				Plug.dj
 			</a>
-			<a class="item">
+			<a href="/" class=" active item">
 				Accueil
 			</a>
 		</div>
