@@ -1,17 +1,17 @@
-var express=require('express');
-var app=express();
-var bodyparser=require('body-parser');
-var mysql = require('mysql');
+let express=require('express');
+let app=express();
+let bodyparser=require('body-parser');
+let mysql = require('mysql');
 
 //declaration DB
-var connection = mysql.createConnection({
+let connection = mysql.createConnection({
   host     : 'den1.mysql2.gear.host',
   user     : 'plugdj',
   password : 'Dz7x~JX~qgqj',
   database : 'plugdj'
 });
 //variable des rooms
-var rooms=[];
+let rooms=[];
 //Utilisation body parser
 app.use(bodyparser.urlencoded({ extended: false }));
 //declaration dossier public
@@ -45,5 +45,19 @@ app.post('/',(req,res)=>{
 			res.redirect('/');
 		}
 	})
-})
+});
+//creation de compte
+app.post('/register',(req,res)=>{
+	let username=req.body.username;
+	let email=req.body.email;
+	let pass=req.body.password;
+	let createAccount=`INSERT INTO users (username,email,pass) VALUES ('${username}','${email}','${pass}');`;
+	connection.query(createAccount,(error,results,field)=>{
+		if(error){
+			console.log(error);
+		}else{
+			res.redirect('/');
+		}
+	});
+});
 app.listen(8080);
