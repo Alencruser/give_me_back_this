@@ -16,7 +16,10 @@ let connection = mysql.createConnection({
 //stock date here 
 let rooms=[];
 //app use of express session
-app.use(session({secret: 'ssshhhhh'}));
+app.use(session({secret: 'ssshhhhh',
+	resave: true,
+	saveUninitialized: true}
+	));
 //The let we will use for keep session storage
 let sess;
 //Use of body-parser
@@ -114,6 +117,6 @@ app.get('/logout',(req,res)=>{
 	});
 });
 //Opening the server on the following port
-http.listen(8080, function(){
-  console.log('listening on *:8080');
+http.listen(8080, ()=>{
+	console.log('listening on 8080');
 });
