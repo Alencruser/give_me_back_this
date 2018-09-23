@@ -1,3 +1,15 @@
 <%-include('partials/head')%>
 <h2>Bienvenue sur la room <%=room%></h2>
+<form class="ui form" action="/room/<%=room%>" method="POST">
+	<div class="field">
+		<label for="music">Lien youtube</label>
+	<input type="text" name="music" id="music">	
+	</div>
+	<button class="ui button" type="submit">Lancer une playlist</button>
+</form>
+<% if (locals.music) { -%>
+	<iframe width="480" height="270"
+src="https://www.youtube.com/embed/<%=music%>?autoplay=1&controls=0&disablekb=1&enablejsapi=1"
+frameborder="0" allowfullscreen></iframe>
+<% } -%>
 <%-include('partials/foot')%>
