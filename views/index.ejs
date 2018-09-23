@@ -1,117 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>plug.dj</title>
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.0/dist/semantic.min.css">
-	<link rel="stylesheet" href="custom.css">
-</head>
-<body class="container-fluid">
-	<% if (locals.message) { -%>
-	<div><p><%=message[0]%> : <%=message[1]%></p></div>
-	<% } -%>
-	<div class="ui inverted segment menu">
-		<div class="ui inverted secondary pointing menu">
-			<a href="/" class="item">
-				Plug.dj
-			</a>
-			<a href="/" class=" active item">
-				Accueil
-			</a>
-		</div>
-		<div class="right menu">
-			<% if (locals.username) { -%>
-			<a class="item"><button onClick="$('#room').modal('show');" class="ui inverted green button">Creer une room</button></a>
-			<a href="/logout" class="item"><button class="ui inverted red button">Se deconnecter</button></a>
-			<% }else { -%>
-			<a class="item"><button onClick="$('#connect').modal('show');" class="ui inverted blue button">Se connecter</button></a>
-			<a class="item"><button onClick="$('#register').modal('show');" class="ui inverted blue button">S'enregistrer</button></a>
-			<%}%>
-		</div>
-	</div>
-	<div class="ui mini modal" id="room">
-		<form action="/" method="POST">
-			<div class="ui big form">
-				<div class="field">
-					<label for="name">Nom de votre room</label>
-					<input class="form-control" type="text" name="name" id="name">					
-				</div>
-				<div class="field">
-					<label for="description">Description de votre Room</label>
-					<textarea rows="2" name="description" id="description"></textarea>
-				</div>
-				<hr>
-				<button type="submit" class="ui blue big button">Creer une room</button></a>
-			</div>
-		</form>
-	</div>
-	<div class="ui mini modal" id="connect">
-		<form action="/connect" method="POST">
-			<div class="ui big form">
-				<div class="field">
-					<label for="pseudo">Pseudo</label>
-					<input type="text" name="pseudo" id="pseudo">					
-				</div>
-				<div class="field">
-					<label for="pass">Mot de passe</label>
-					<input type="password" name="pass" id="pass">
-				</div>
-				<hr>
-				<button type="submit" class="ui blue big button">Se connecter</button></a>
-			</div>
-		</form>
-	</div>
-	<div class="ui mini modal" id="register">
-		<form action="/register" method="POST">
-			<div class="ui big form">
-				<div class="field">
-					<label for="username">Pseudo</label>
-					<input class="form-control" type="text" name="username" id="username">					
-				</div>
-				<div class="field">
-					<label for="email">Email</label>
-					<input type="text" name="email" id="email">
-				</div>
-				<div class="field">
-					<label for="password">Mot de passe</label>
-					<input type="password" name="password" id="password">
-				</div>
-				<hr>
-				<button type="submit" class="ui blue big button">Creer un compte</button></a>
-			</div>
-		</form>
-	</div>
+	<%- include('partials/head')%>
 	<% if (locals.rooms) { %>
 	<div class="ui three column grid">
 		<% rooms.forEach(function(room){%>
 		<div class="column">
-			<div class="ui fluid card">
-				<div class="content">
-					<div class="header"><%=room.name%></div>
+			<a href="/room/<%=room.name%>">
+				<div class="ui fluid card">
+					<div class="content">
+						<div class="header"><%=room.name%></div>
+					</div>
+					<div class="image">
+						<img src="https://cdn-prod.plug.dj/_/static/images/fbimage.61abd2570b246a8b49990db2c3a0fe3b877cfcd2.jpg">
+					</div>
+					<div class="description">
+						<%=room.description%>
+					</div>
+					<div class="extra content">
+						<span class="right floated">
+							<%=room.created_at%>
+						</span>
+					</div>
 				</div>
-				<div class="image">
-					<img src="https://cdn-prod.plug.dj/_/static/images/fbimage.61abd2570b246a8b49990db2c3a0fe3b877cfcd2.jpg">
-				</div>
-				<div class="description">
-					<%=room.description%>
-				</div>
-				<div class="extra content">
-					<span class="right floated">
-						<%=room.created_at%>
-					</span>
-				</div>
-			</div>
+			</a>
 		</div>
 		<%})%>
-
 	</div>
 	<% } %>
-	<script
-	src="https://code.jquery.com/jquery-3.3.1.min.js"
-	integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-	crossorigin="anonymous"></script>
-	<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.0/dist/semantic.min.js"></script>
-	<script src="/socket.io/socket.io.js"></script>
-	<script>let socket = io()</script>
-</body>
-</html>
+	<%-include('partials/foot')%>
