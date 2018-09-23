@@ -29,7 +29,8 @@ let sess;
 //Use of body-parser
 app.use(bodyparser.urlencoded({ extended: false }));
 //use of static folder
-app.use(express.static('public'));
+app.use('/',express.static('public'));
+app.use('/room',express.static('public'));
 //use of ejs template engine
 app.set('view engine', 'ejs');
 //Securisation input
