@@ -32,6 +32,17 @@ app.set('view engine', 'ejs');
 io.on('connection',(socket)=>{
 	console.log('a new connection detected');
 });
+//Securisation input
+ function blbl(str) {
+        if (str == null) return '';
+
+        return String(str).
+            replace(/&/g, '&amp;').
+            replace(/</g, '&lt;').
+            replace(/>/g, '&gt;').
+            replace(/"/g, '&quot;').
+            replace(/'/g, '&#039;');
+    };
 //Home page
 app.get('/',(req,res)=>{
 	sess=req.session;
@@ -61,8 +72,8 @@ app.get('/',(req,res)=>{
 });
 //Create a room
 app.post('/',(req,res)=>{
-	let name=req.body.name;
-	let description=req.body.description;
+	let name=blbl(req.body.name);
+	let description=blbl(req.body.description);
 	let createRoom = `INSERT INTO rooms (name,description,created_at) VALUES ('${name}','${description}',NOW())`;
 	connection.query(createRoom,(error,results,field)=>{
 		if(error){
@@ -76,9 +87,9 @@ app.post('/',(req,res)=>{
 });
 //create an account
 app.post('/register',(req,res)=>{
-	let username=req.body.username;
-	let email=req.body.email;
-	let pass=req.body.password;
+	let username=blbl(req.body.username);
+	let email=blbl(req.body.email);
+	let pass=blbl(req.body.password);
 	let createAccount=`INSERT INTO users (username,email,pass) VALUES ('${username}','${email}','${pass}');`;
 	connection.query(createAccount,(error,results,field)=>{
 		if(error){
@@ -94,8 +105,8 @@ app.post('/register',(req,res)=>{
 //Connect to an account
 app.post('/connect',(req,res)=>{
 	sess=req.session;
-	let username=req.body.pseudo;
-	let pass=req.body.pass;
+	let username=blbl(req.body.pseudo);
+	let pass=blbl(req.body.pass);
 	let connectAccount=`SELECT pass FROM users WHERE username='${username}'`;
 	connection.query(connectAccount,(error,results,field)=>{
 		if(error){
