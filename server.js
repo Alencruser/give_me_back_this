@@ -28,6 +28,10 @@ app.use(bodyparser.urlencoded({ extended: false }));
 app.use(express.static('public'));
 //use of ejs template engine
 app.set('view engine', 'ejs');
+//test of io
+io.on('connection',(socket)=>{
+	console.log('a new connection detected');
+});
 //Home page
 app.get('/',(req,res)=>{
 	sess=req.session;
