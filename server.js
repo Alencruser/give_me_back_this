@@ -120,6 +120,14 @@ app.get('/logout',(req,res)=>{
 		}
 	});
 });
+//When going to a room
+app.get('/room/:id',(req,res)=>{
+	sess=req.session;
+	if(session.username){
+		res.render('room',{username:sess.username,room:req.params.id});
+	}
+	res.render('room',{room:req.params.id});
+});
 //Opening the server on the following port
 http.listen(8080, ()=>{
 	console.log('listening on 8080');
