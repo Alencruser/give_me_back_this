@@ -1,12 +1,16 @@
-<%-include('partials/head')%>
-<h2>Bienvenue sur la room <%=room%></h2>
+<%- include('partials/head')%>
+<h2 class="ui centered grid">Bienvenue sur la room <%=room%></h2><br>
+<hr>
 <form class="ui form" action="/room/<%=room%>" method="POST">
 	<div class="field">
-		<label for="music">Lien youtube</label>
+		<div class="ui red label">
+		<label class='white' for="music">Lien youtube</label>
+		</div>
 		<input type="text" name="music" id="music">	
 	</div>
-	<button class="ui button" type="submit">Lancer une playlist</button>
+	<button class="ui red button" type="submit">Lancer une playlist</button>
 </form>
+<hr><br>
 <% if (locals.music) { -%>
 <div class="ui centered grid">
 	<iframe width="480" height="270"
