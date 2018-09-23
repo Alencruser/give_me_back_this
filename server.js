@@ -20,6 +20,10 @@ app.use(session({secret: 'ssshhhhh',
 	resave: true,
 	saveUninitialized: true}
 	));
+//initialise socket io
+	io.on('connection',(socket)=>{
+	console.log('a new connection detected');
+});
 //The let we will use for keep session storage
 let sess;
 //Use of body-parser
@@ -28,10 +32,6 @@ app.use(bodyparser.urlencoded({ extended: false }));
 app.use(express.static('public'));
 //use of ejs template engine
 app.set('view engine', 'ejs');
-//test of io
-io.on('connection',(socket)=>{
-	console.log('a new connection detected');
-});
 //Securisation input
  function blbl(str) {
         if (str == null) return '';
@@ -138,6 +138,12 @@ app.get('/room/:id',(req,res)=>{
 		res.render('room',{username:sess.username,room:req.params.id});
 	}
 	res.render('room',{room:req.params.id});
+});
+//When an user enter a youtube link
+app.post('/room/:id',(req,res)=>{
+	let music=req.body.music.split('=');
+	music=music[1];
+	res.render('room',{music:music,room:req.params.id})
 });
 //Opening the server on the following port
 http.listen(8080, ()=>{
