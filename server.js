@@ -5,6 +5,7 @@ let mysql = require('mysql');
 let session = require('express-session');
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+let ent = require('ent')
 
 //settings DB
 let connection = mysql.createConnection({
@@ -36,13 +37,7 @@ app.set('view engine', 'ejs');
 //Securisation input
  function blbl(str) {
         if (str == null) return '';
-
-        return String(str).
-            replace(/&/g, '&amp;').
-            replace(/</g, '&lt;').
-            replace(/>/g, '&gt;').
-            replace(/"/g, '&quot;').
-            replace(/'/g, '&#039;');
+        return ent.encode(str);
     };
 //Home page
 app.get('/',(req,res)=>{
