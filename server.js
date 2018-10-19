@@ -5,7 +5,6 @@ let mysql = require('mysql');
 let session = require('express-session');
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-let ent = require('ent')
 
 //settings DB
 let connection = mysql.createConnection({
@@ -22,7 +21,7 @@ app.use(session({secret: 'ssshhhhh',
 	saveUninitialized: true}
 	));
 //initialise socket io
-	io.on('connection',(socket)=>{
+io.on('connection',(socket)=>{
 	console.log('a new connection detected');
 });
 //The let we will use for keep session storage
@@ -35,10 +34,16 @@ app.use('/room',express.static('public'));
 //use of ejs template engine
 app.set('view engine', 'ejs');
 //Securisation input
- function blbl(str) {
-        if (str == null) return '';
-        return ent.encode(str);
-    };
+function blbl(str) {
+	if (str == null) return '';
+	return String(str).
+	replace(/&/g, '&amp;').
+	replace(/</g, '&lt;').
+	replace(/>/g, '&gt;').
+	replace(/"/g, '&quot;').
+	replace(/--/g, '&#151;').
+	replace(/'/g, '&#039;');
+};
 //Home page
 app.get('/',(req,res)=>{
 	sess=req.session;
