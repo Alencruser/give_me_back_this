@@ -3,16 +3,9 @@ let app=express();
 let bodyparser=require('body-parser');
 let mysql = require('mysql');
 let session = require('express-session');
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
-
-//settings DB
-let connection = mysql.createConnection({
-	host     : 'den1.mysql2.gear.host',
-	user     : 'plugdj',
-	password : 'Dz7x~JX~qgqj',
-	database : 'plugdj'
-});
+let http = require('http').Server(app);
+let io = require('socket.io')(http);
+let connection = require('./bdd');
 //stock date here 
 let rooms=[];
 //app use of express session
@@ -56,7 +49,6 @@ app.get('/',(req,res)=>{
 			results.forEach((bl)=>{
 				rooms.push(bl.created_at);
 			})
-			console.log(rooms[0]);
 			if(sess.username){
 				res.render('index',{rooms:results,username:sess.username});
 			}else{
