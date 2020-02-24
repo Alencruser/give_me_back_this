@@ -13,9 +13,14 @@
 <hr><br>
 <% if (locals.music) { -%>
 <div class="ui centered grid">
-	<iframe width="480" height="270"
+	<iframe class="youtube-video" width="480" height="270"
 	src="https://www.youtube.com/embed/<%=music%>?autoplay=1&controls=0&disablekb=1&enablejsapi=1&modestbranding=1&controls=0&iv_load_policy=3"
-	frameborder="0" allowfullscreen></iframe>
+	frameborder="0" enablejsapi="1" allowfullscreen></iframe>
 </div>
+<script>
+	socket.on('test', function(data){
+		console.log(data);
+	})
+</script>
 <% } -%>
 <%-include('partials/foot')%>
