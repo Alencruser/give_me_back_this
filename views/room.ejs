@@ -1,4 +1,5 @@
 <%- include('partials/head')%>
+<!-- recuperer l'id de la room ici pour creer une room io -->
 <h2 class="ui centered grid">Bienvenue sur la room <%=room%></h2><br>
 <hr>
 <div class="field">
@@ -11,12 +12,11 @@
 			</div>
 	<button class="ui red button" id="ebfei">Lancer une playlist</button>
 <hr><br>
-<% if (locals.music) { -%>
 <div class="ui centered grid" id="player">
 
 </div>
-<% } -%>
-<script>let socket= io();
+<script>
+	let socket= io('',{query:"room="+"<%=room%>"});
 
 	document.getElementById('ebfei').addEventListener('click',(e)=>{
 		socket.emit('video',document.getElementById('music').value);
@@ -24,6 +24,7 @@
 	});
 	socket.on('video',function(url){
 		//player youtube
+
 		console.log(url);
 	})
 	</script>

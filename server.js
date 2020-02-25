@@ -23,10 +23,11 @@ app.use(cors());
 //initialise socket io
 io.on('connection', (socket) => {
 	console.log('a new connection detected');
+	let room = socket.handshake['query']['room'];
+	socket.join(room);
 	//ici socket on l'event d'envoyer une url et renvoyer le lien en broadcast emit
 	socket.on('video',function (url){
-		console.log(url);
-		io.emit('video',url)
+		io.to(room).emit('video',url);
 	});
 });
 //The let we will use for keep session storage
@@ -137,6 +138,7 @@ app.get('/logout', (req, res) => {
 	});
 });
 //When going to a room
+//creer une room io personnalisée ici
 app.get('/room/:id', (req, res) => {
 	sess = req.session;
 	if (session.username) {
