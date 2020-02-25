@@ -1,26 +1,31 @@
 <%- include('partials/head')%>
 <h2 class="ui centered grid">Bienvenue sur la room <%=room%></h2><br>
 <hr>
-<form class="ui form" action="/room/<%=room%>" method="POST">
-	<div class="field">
+<div class="field">
 		<div class="ui red label">
-		<label class='white' for="music">Lien youtube</label>
+			<label class='white' for="music">Lien youtube</label>
 		</div>
-		<input type="text" name="music" id="music">	
 	</div>
-	<button class="ui red button" type="submit">Lancer une playlist</button>
-</form>
+			<div class="ui input">
+				<input type="text" name="music" id="music">
+			</div>
+	<button class="ui red button" id="ebfei">Lancer une playlist</button>
 <hr><br>
 <% if (locals.music) { -%>
-<div class="ui centered grid">
-	<iframe class="youtube-video" width="480" height="270"
-	src="https://www.youtube.com/embed/<%=music%>?autoplay=1&controls=0&disablekb=1&enablejsapi=1&modestbranding=1&controls=0&iv_load_policy=3"
-	frameborder="0" enablejsapi="1" allowfullscreen></iframe>
+<div class="ui centered grid" id="player">
+
 </div>
-<script>
-	socket.on('test', function(data){
-		console.log(data);
-	})
-</script>
 <% } -%>
+<script>let socket= io();
+
+	document.getElementById('ebfei').addEventListener('click',(e)=>{
+		socket.emit('video',document.getElementById('music').value);
+		document.getElementById('music').value = "";
+	});
+	socket.on('video',function(url){
+		//player youtube
+		console.log(url);
+	})
+	</script>
+
 <%-include('partials/foot')%>

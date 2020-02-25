@@ -23,6 +23,11 @@ app.use(cors());
 //initialise socket io
 io.on('connection', (socket) => {
 	console.log('a new connection detected');
+	//ici socket on l'event d'envoyer une url et renvoyer le lien en broadcast emit
+	socket.on('video',function (url){
+		console.log(url);
+		io.emit('video',url)
+	});
 });
 //The let we will use for keep session storage
 let sess;
@@ -143,7 +148,6 @@ app.get('/room/:id', (req, res) => {
 app.post('/room/:id', (req, res) => {
 	let music = req.body.music.split('=');
 	music = music[1];
-	io.emit('test', { test: 'blbl' });
 	res.render('room', { music: music, room: req.params.id })
 });
 
