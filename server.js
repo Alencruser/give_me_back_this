@@ -154,6 +154,6 @@ app.post('/room/:id', (req, res) => {
 });
 
 //Opening the server on the following port
-http.listen(8080, () => {
-	console.log('listening on 8080');
+http.listen(process.env.PORT || 8080, () => {
+	console.log('listening on '+process.env.PORT || 8080);
 });
