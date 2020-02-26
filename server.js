@@ -12,10 +12,10 @@ if(fs.existsSync('./bdd.js')){
 	connection = require('./bdd');
 }else {
 	connection = mysql.createConnection({
-		host     : ENV_HOST,
-		user     : ENV_USER,
-		password : ENV_PASS,
-		database : ENV_DB
+		host     : process.env.ENV_HOST,
+		user     : process.env.ENV_USER,
+		password : process.env.ENV_PASS,
+		database : process.env.ENV_DB
 		});
 	
 }
