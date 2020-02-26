@@ -1,22 +1,26 @@
 let express = require('express');
 let app = express();
+let fs = require('fs');
 let bodyparser = require('body-parser');
 let mysql = require('mysql');
 let session = require('express-session');
 let http = require('http').Server(app);
 let cors = require('cors');
 let io = require('socket.io')(http);
-let connection = require('./bdd');
-//stock date here 
-let rooms = [];
-if(!connection.config.database){
+let connection;
+if(fs.existsSync('./bdd.js')){
+	connection = require('./bdd');
+}else {
 	connection = mysql.createConnection({
 		host     : ENV_HOST,
 		user     : ENV_USER,
 		password : ENV_PASS,
 		database : ENV_DB
-	});
+		});
+	
 }
+//stock date here 
+let rooms = [];
 //app use of express session
 app.use(session({
 	secret: 'ssshhhhh',
