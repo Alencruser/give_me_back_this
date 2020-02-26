@@ -1,32 +1,73 @@
 <%- include('partials/head')%>
 <!-- recuperer l'id de la room ici pour creer une room io -->
-<h2 class="ui centered grid">Bienvenue sur la room <%=room%></h2><br>
+<h2 class="ui centered grid" style="color:#fff	">Bienvenue sur la room <%=room%></h2><br>
 <hr>
 <div class="field">
-		<div class="ui red label">
-			<label class='white' for="music">Lien youtube</label>
-		</div>
+	<div class="ui red label">
+		<label class='white' for="music">Lien youtube</label>
 	</div>
-			<div class="ui input">
-				<input type="text" name="music" id="music">
-			</div>
-	<button class="ui red button" id="ebfei">Lancer une playlist</button>
+</div>
+<div class="ui input">
+	<input type="text" name="music" id="music">
+</div>
+<button class="ui red button" id="ebfei">Lancer une playlist</button>
 <hr><br>
-<div class="ui centered grid" id="player">
-
+<div class="ui centered grid">
+	<div id="blbl">
+	</div>
 </div>
 <script>
-	let socket= io('',{query:"room="+"<%=room%>"});
 
-	document.getElementById('ebfei').addEventListener('click',(e)=>{
-		socket.emit('video',document.getElementById('music').value);
+	var player;
+
+	function onYouTubeIframeAPIReady() {
+
+	}
+
+
+	// 4. The API will call this function when the video player is ready.
+	function onPlayerReady(event) {
+		event.target.playVideo();
+	}
+
+	var done = false;
+	function onPlayerStateChange(event) {
+		if (event.data == YT.PlayerState.PLAYING && !done) {
+			done = true;
+		}
+	}
+	function stopVideo() {
+		player.stopVideo();
+	}
+
+	//socket part
+	let socket = io('', { query: "room=" + "<%=room%>" });
+
+	document.getElementById('ebfei').addEventListener('click', (e) => {
+		socket.emit('video', document.getElementById('music').value);
 		document.getElementById('music').value = "";
 	});
-	socket.on('video',function(url){
-		//player youtube
 
+	//receptionner levenement join pour envoyer le player et player pour l'itegrer
+
+	socket.on('video', function (url) {
+		//player youtube
+		console.log(typeof player);
+		if (!player) {
+			player = new YT.Player('blbl', {
+				height: '360',
+				width: '620',
+				videoId: url,
+				events: {
+					'onReady': onPlayerReady,
+					'onStateChange': onPlayerStateChange
+				}
+			});
+		}else {
+			player.cuePlaylist([url]);
+		}
 		console.log(url);
 	})
-	</script>
+</script>
 
 <%-include('partials/foot')%>

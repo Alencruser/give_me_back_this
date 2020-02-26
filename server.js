@@ -1,23 +1,25 @@
-let express = require('express');
-let app = express();
-let fs = require('fs');
-let bodyparser = require('body-parser');
-let mysql = require('mysql');
-let session = require('express-session');
-let http = require('http').Server(app);
-let cors = require('cors');
-let io = require('socket.io')(http);
-let connection;
-if(fs.existsSync('./bdd.js')){
+let express = require('express'),
+	app = express(),
+	fs = require('fs'),
+	bodyparser = require('body-parser'),
+	mysql = require('mysql'),
+	session = require('express-session'),
+	http = require('http').Server(app),
+	cors = require('cors'),
+	io = require('socket.io')(http),
+	bcrypt = require('bcrypt'),
+	connection,
+	message = ["", "",""];
+if (fs.existsSync('./bdd.js')) {
 	connection = require('./bdd');
-}else {
+} else {
 	connection = mysql.createConnection({
-		host     : process.env.ENV_HOST,
-		user     : process.env.ENV_USER,
-		password : process.env.ENV_PASS,
-		database : process.env.ENV_DB
-		});
-	
+		host: process.env.ENV_HOST,
+		user: process.env.ENV_USER,
+		password: process.env.ENV_PASS,
+		database: process.env.ENV_DB
+	});
+
 }
 //stock date here 
 let rooms = [];
@@ -37,9 +39,15 @@ io.on('connection', (socket) => {
 	console.log('a new connection detected');
 	let room = socket.handshake['query']['room'];
 	socket.join(room);
+	io.to(room).emit('join');
+	socket.on('join',function (player){
+		io.to(room).emit('player',player);
+	})
 	//ici socket on l'event d'envoyer une url et renvoyer le lien en broadcast emit
-	socket.on('video',function (url){
-		io.to(room).emit('video',url);
+	socket.on('video', function (url) {
+		if(url.includes('www'))url = url.split('v=')[1];
+		if(url.includes('&'))url= url.split('&')[0];
+		io.to(room).emit('video', url);
 	});
 });
 //The let we will use for keep session storage
@@ -69,21 +77,23 @@ app.get('/', (req, res) => {
 	connection.query(getRooms, (error, results, fields) => {
 		if (error) {
 			console.log(error);
-			let message = ['erreur', 'Problème pour la récupération de rooms'];
+			message = ['negative', 'Problème pour la récupération de rooms'];
+			res.render('index', { message: message })
 		} else if (results.length > 0) {
+
 			results.forEach((bl) => {
 				rooms.push(bl.created_at);
 			})
 			if (sess.username) {
-				res.render('index', { rooms: results, username: sess.username });
+				res.render('index', { rooms: results, username: sess.username, message: message });
 			} else {
-				res.render('index', { rooms: results });
+				res.render('index', { rooms: results, message: message });
 			}
 		} else {
 			if (sess.username) {
-				res.render('index', { username: sess.username });
+				res.render('index', { username: sess.username, message: message });
 			} else {
-				res.render('index');
+				res.render('index', { message: message });
 			}
 		}
 	});
@@ -96,9 +106,8 @@ app.post('/', (req, res) => {
 	connection.query(createRoom, (error, results, field) => {
 		if (error) {
 			console.log(error);
-			let message = ['Erreur', 'Problème dans la création de room'];
+			res.redirect('/')
 		} else {
-			let message = 'success,Room créée avec succès';
 			res.redirect('/');
 		}
 	})
@@ -108,17 +117,23 @@ app.post('/register', (req, res) => {
 	let username = blbl(req.body.username);
 	let email = blbl(req.body.email);
 	let pass = blbl(req.body.password);
-	let createAccount = `INSERT INTO users (username,email,pass) VALUES ('${username}','${email}','${pass}');`;
-	connection.query(createAccount, (error, results, field) => {
-		if (error) {
-			console.log(error);
-			let message = ['Erreur', 'Echec dans la creation de compte'];
-			res.redirect('/');
-		} else {
-			let message = ['success', 'Compte bien crée'];
-			res.redirect('/');
-		}
+	bcrypt.genSalt(10, (err, salt) => {
+		bcrypt.hash(pass, salt, (err, hash) => {
+			pass = hash;
+			let createAccount = `INSERT INTO users (username,email,pass) VALUES ('${username}','${email}','${pass}');`;
+			connection.query(createAccount, (error, results, field) => {
+				if (error) {
+					console.log(error);
+					message = ['negative', 'Echec dans la creation de compte'];
+					res.redirect('/');
+				} else {
+					message = ['success', 'Compte bien crée'];
+					res.redirect('/');
+				}
+			});
+		})
 	});
+
 });
 //Connect to an account
 app.post('/connect', (req, res) => {
@@ -129,13 +144,17 @@ app.post('/connect', (req, res) => {
 	connection.query(connectAccount, (error, results, field) => {
 		if (error) {
 			console.log(error);
-		} else if (pass == results[0].pass) {
-			console.log('authentication success');
-			sess.username = username;
-			res.redirect('/');
 		} else {
-			console.log('wrong pass');
-			res.redirect('/')
+			bcrypt.compare(pass, results[0].pass, (err, result) => {
+				if (result) {
+					message = ['success',"Vous vous êtes connecté avec succès"];
+					sess.username = username;
+					res.redirect('/');
+				} else {
+					message = ['negative','Mot de passe incorrect'];
+					res.redirect('/')
+				}
+			})
 		}
 	});
 });
@@ -158,14 +177,9 @@ app.get('/room/:id', (req, res) => {
 	}
 	res.render('room', { room: req.params.id });
 });
-//When an user enter a youtube link
-app.post('/room/:id', (req, res) => {
-	let music = req.body.music.split('=');
-	music = music[1];
-	res.render('room', { music: music, room: req.params.id })
-});
+
 
 //Opening the server on the following port
 http.listen(process.env.PORT || 8080, () => {
-	console.log('listening on '+process.env.PORT || 8080);
+	console.log('listening on ' + process.env.PORT || 8080);
 });

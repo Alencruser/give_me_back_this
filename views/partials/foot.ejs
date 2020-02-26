@@ -3,5 +3,13 @@
 	integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
 	crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.0/dist/semantic.min.js"></script>
+	<script>$('.message .close')
+		.on('click', function() {
+		  $(this)
+			.closest('.message')
+			.transition('fade')
+		  ;
+		})
+	  ;</script>
 </body>
 </html>

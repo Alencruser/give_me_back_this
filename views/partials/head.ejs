@@ -6,12 +6,10 @@
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.0/dist/semantic.min.css">
 	<link rel="stylesheet" href="custom.css">
 	<script src="/socket.io/socket.io.js"></script>
-	
+	<script async src="https://www.youtube.com/iframe_api"></script>
 </head>
 <body class="container-fluid">
-	<% if (locals.message) { -%>
-	<div><p><%=message[0]%> : <%=message[1]%></p></div>
-	<% } -%>
+	
 	<div class="ui inverted segment menu">
 		<div class="ui inverted secondary pointing menu">
 			<a href="/" class="item">
@@ -31,6 +29,15 @@
 			<%}%>
 		</div>
 	</div>
+	<%  if (locals.message && message[0]!="") { -%>
+		<div class="ui message <%=message[0]%>">
+			<i class="close icon"></i>
+			<div class="header">
+				<%=message[1]%>
+			</div>
+			<p><%=message[2]%></p>
+		</div>
+	<% } -%>
 	<div class="ui mini modal" id="room">
 		<form action="/" method="POST">
 			<div class="ui big form">
