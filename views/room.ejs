@@ -32,9 +32,14 @@
 
 	var done = false;
 	function onPlayerStateChange(event) {
-		if (event.data == YT.PlayerState.PLAYING && !done) {
-			done = true;
+		if (event.data == YT.PlayerState.ENDED) {
+			console.log('fin de musique')
+			player.nextVideo();
+			player.playVideo();
+		}else if(event.data == YT.PlayerState.CUED){
+			console.log('cued musique');
 		}
+		console.log('youtube player',player)
 	}
 	function stopVideo() {
 		player.stopVideo();
@@ -52,19 +57,20 @@
 
 	socket.on('video', function (url) {
 		//player youtube
-		console.log(typeof player);
 		if (!player) {
 			player = new YT.Player('blbl', {
 				height: '360',
 				width: '620',
 				videoId: url,
+				playerVars: { 'autoplay': 1, 'controls': 1 },
 				events: {
 					'onReady': onPlayerReady,
 					'onStateChange': onPlayerStateChange
 				}
 			});
 		}else {
-			player.cuePlaylist([url]);
+			console.log('cue video')
+			cueVideoById(url);
 		}
 		console.log(url);
 	})
