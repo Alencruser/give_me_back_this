@@ -9,6 +9,14 @@ let io = require('socket.io')(http);
 let connection = require('./bdd');
 //stock date here 
 let rooms = [];
+if(!connection.config.database){
+	connection = mysql.createConnection({
+		host     : ENV_HOST,
+		user     : ENV_USER,
+		password : ENV_PASS,
+		database : ENV_DB
+	});
+}
 //app use of express session
 app.use(session({
 	secret: 'ssshhhhh',
