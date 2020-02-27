@@ -17,7 +17,10 @@
 	</div>
 </div>
 <script>
-
+	document.getElementById('blbl').addEventListener('click', (e) => {
+		e.preventDefault();
+	})
+	let playlist = [];
 	var player;
 
 	function onYouTubeIframeAPIReady() {
@@ -33,13 +36,15 @@
 	var done = false;
 	function onPlayerStateChange(event) {
 		if (event.data == YT.PlayerState.ENDED) {
-			console.log('fin de musique')
-			player.nextVideo();
-			player.playVideo();
-		}else if(event.data == YT.PlayerState.CUED){
+			console.log('fin de musique');
+			if (playlist.length) {
+				player.loadVideoById(playlist[0])
+			}
+			playlist.shift();
+		} else if (event.data == YT.PlayerState.CUED) {
 			console.log('cued musique');
 		}
-		console.log('youtube player',player)
+		console.log('youtube player', player)
 	}
 	function stopVideo() {
 		player.stopVideo();
@@ -62,15 +67,14 @@
 				height: '360',
 				width: '620',
 				videoId: url,
-				playerVars: { 'autoplay': 1, 'controls': 1 },
+				playerVars: { 'controls': 0, 'iv_load_policy': 3, 'showinfo': 0, 'rel': 0 },
 				events: {
 					'onReady': onPlayerReady,
 					'onStateChange': onPlayerStateChange
 				}
 			});
-		}else {
-			console.log('cue video')
-			cueVideoById(url);
+		} else {
+			playlist.push(url);
 		}
 		console.log(url);
 	})
