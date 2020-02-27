@@ -1,3 +1,7 @@
 body {
 	background-color: rgb(27,28,29);
 }
+
+#blbl {
+	pointer-events: none;
+}
