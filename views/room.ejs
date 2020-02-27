@@ -12,7 +12,7 @@
 </div>
 <button class="ui red button" id="ebfei">Lancer une playlist</button>
 <hr><br>
-<div class="ui centered grid">
+<div class="ui centered grid" id="containPlayer">
 	<div id="blbl">
 	</div>
 </div>
@@ -38,7 +38,13 @@
 		if (event.data == YT.PlayerState.ENDED) {
 			console.log('fin de musique');
 			if (playlist.length) {
-				player.loadVideoById(playlist[0])
+				player.loadVideoById(playlist[0]);
+			}else {
+				div = document.createElement('div');
+				div.id ="blbl";
+				document.getElementById('containPlayer').removeChild(document.getElementById('blbl'));
+				document.getElementById('containPlayer').appendChild(div);
+				player = undefined;
 			}
 			playlist.shift();
 		} else if (event.data == YT.PlayerState.CUED) {
