@@ -17,9 +17,6 @@
 	</div>
 </div>
 <script>
-	document.getElementById('blbl').addEventListener('click', (e) => {
-		e.preventDefault();
-	})
 	let playlist = [];
 	var player;
 
@@ -47,8 +44,6 @@
 				player = undefined;
 			}
 			playlist.shift();
-		} else if (event.data == YT.PlayerState.CUED) {
-			console.log('cued musique');
 		}
 		console.log('youtube player', player)
 	}
@@ -74,7 +69,8 @@
 
 	socket.on('player',function(play,list){
 		let currentTime = play.l.currentTime
-		let videoId = play.b.b.videoId;
+		let videoId = play.l.videoData.video_Id;
+		console.log('currenturlPLS',play);
 		if(!player){
 			playlist = list;
 			setTimeout(()=>{
@@ -93,6 +89,8 @@
 					}
 				});
 			})
+		} else {
+			console.log('jai deja mon player')
 		}
 	})
 

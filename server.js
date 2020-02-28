@@ -49,6 +49,10 @@ io.on('connection', (socket) => {
 		if(url.includes('&'))url= url.split('&')[0];
 		io.to(room).emit('video', url);
 	});
+
+	socket.on('disconnect',function(){
+		socket.leave(room);
+	})
 });
 //The let we will use for keep session storage
 let sess;
