@@ -41,7 +41,7 @@ io.on('connection', (socket) => {
 	socket.join(room);
 	io.to(room).emit('join');
 	socket.on('join',function (player){
-		io.to(room).emit('player',player);
+		io.to(room).emit('player',player.player,player.list);
 	})
 	//ici socket on l'event d'envoyer une url et renvoyer le lien en broadcast emit
 	socket.on('video', function (url) {

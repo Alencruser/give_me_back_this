@@ -66,6 +66,37 @@
 
 	//receptionner levenement join pour envoyer le player et player pour l'itegrer
 
+	socket.on('join', function(){
+		if(player){
+			socket.emit('join',{player:player,list:playlist});
+		}
+	});
+
+	socket.on('player',function(play,list){
+		let currentTime = play.l.currentTime
+		let videoId = play.b.b.videoId;
+		if(!player){
+			playlist = list;
+			setTimeout(()=>{
+
+				player = new YT.Player('blbl', {
+					height: '360',
+					width: '620',
+					videoId: videoId,
+					playerVars: { 'controls': 0, 'iv_load_policy': 3, 'showinfo': 0, 'rel': 0 },
+					events: {
+						'onReady': function(){
+							player.loadVideoById(videoId,currentTime+2.5);
+							console.log(playlist);
+						},
+						'onStateChange': onPlayerStateChange
+					}
+				});
+			})
+		}
+	})
+
+
 	socket.on('video', function (url) {
 		//player youtube
 		if (!player) {
@@ -82,7 +113,6 @@
 		} else {
 			playlist.push(url);
 		}
-		console.log(url);
 	})
 </script>
 
