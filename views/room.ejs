@@ -36,6 +36,7 @@
 			console.log('fin de musique');
 			if (playlist.length) {
 				player.loadVideoById(playlist[0]);
+				playlist.shift();
 			}else {
 				div = document.createElement('div');
 				div.id ="blbl";
@@ -43,8 +44,11 @@
 				document.getElementById('containPlayer').appendChild(div);
 				player = undefined;
 			}
-			playlist.shift();
+		} else if ( event.data == -1 ) {
+			console.log('je suis en pause');
+			event.data = 1;
 		}
+		console.log(event.data);
 		console.log('youtube player', player)
 	}
 	function stopVideo() {
@@ -70,10 +74,11 @@
 	socket.on('player',function(play,list){
 		console.log('trouver le bon id FS',play);
 		let currentTime = play.l.currentTime
-		let videoId = play.l.videoUrl;
-		
+		let videoId = play.l.videoUrl.split('v=')[1];
+		console.log('check de la video ID',videoId);
 		console.log('currenturlPLS',play);
 		if(!player){
+			console.log('je craft le player');
 			playlist = list;
 			setTimeout(()=>{
 
@@ -84,8 +89,19 @@
 					events: {
 						'onReady': function(){
 							player.loadVideoById(videoId,currentTime+2.5);
+							console.log('this onready',this);
+							console.log('player onready',player);
+							console.log('state en cours',player.PlayerState);
+							console.log('state en cours v2',player.data);
+							console.log('getplayerstate',player.getPlayerState());
+							player.pauseVideo();
+							player.playVideo();
 						},
-						'onStateChange': onPlayerStateChange
+						'onStateChange': onPlayerStateChange,
+						'onError': function(e){
+							console.log(e.data);
+							console.log(e);
+						}
 					}
 				});
 			})
