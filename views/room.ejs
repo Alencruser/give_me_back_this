@@ -12,13 +12,16 @@
 </div>
 <button class="ui red button" id="ebfei">Lancer une playlist</button>
 <hr><br>
+<center><input type="range" min="0" max="100" step="1" style="padding:0;margin-bottom:8px;" id="sliderJs"></center>
 <div class="ui centered grid" id="containPlayer">
 	<div id="blbl">
 	</div>
 </div>
 <script>
+
 	let playlist = [];
 	var player;
+
 
 	function onYouTubeIframeAPIReady() {
 
@@ -36,9 +39,9 @@
 			if (playlist.length) {
 				player.loadVideoById(playlist[0]);
 				playlist.shift();
-			}else {
+			} else {
 				div = document.createElement('div');
-				div.id ="blbl";
+				div.id = "blbl";
 				document.getElementById('containPlayer').removeChild(document.getElementById('blbl'));
 				document.getElementById('containPlayer').appendChild(div);
 				player = undefined;
@@ -59,31 +62,31 @@
 
 	//receptionner levenement join pour envoyer le player et player pour l'itegrer
 
-	socket.on('join', function(){
-		if(player){
-			socket.emit('join',{player:player,list:playlist});
+	socket.on('join', function () {
+		if (player) {
+			socket.emit('join', { player: player, list: playlist });
 		}
 	});
 
-	socket.on('player',function(play,list){
+	socket.on('player', function (play, list) {
 		let currentTime = play.l.currentTime
 		let videoId = play.l.videoUrl.split('v=')[1];
-		if(!player){
+		if (!player) {
 			playlist = list;
-			setTimeout(()=>{
+			setTimeout(() => {
 
 				player = new YT.Player('blbl', {
 					height: '360',
 					width: '620',
 					playerVars: { 'controls': 0, 'iv_load_policy': 3, 'showinfo': 0, 'rel': 0 },
 					events: {
-						'onReady': function(){
-							player.loadVideoById(videoId,currentTime+2.5);
+						'onReady': function () {
+							player.loadVideoById(videoId, currentTime + 2.5);
 							player.pauseVideo();
 							player.playVideo();
 						},
 						'onStateChange': onPlayerStateChange
-						
+
 					}
 				});
 			})
@@ -108,7 +111,19 @@
 		} else {
 			playlist.push(url);
 		}
-	})
+	});
+
+
+	$('#sliderJs').rangeslider({
+			rangeClass: 'rangeslider',
+			horizontalClass: 'rangeslider--horizontal'
+		});
+	document.getElementById('sliderJs').addEventListener('change',(e)=>{
+		value = document.getElementById('sliderJs').value;
+		if(player){
+			player.setVolume(value);
+		}
+	});
 </script>
 
 <%-include('partials/foot')%>

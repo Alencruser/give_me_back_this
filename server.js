@@ -45,9 +45,12 @@ io.on('connection', (socket) => {
 	})
 	//ici socket on l'event d'envoyer une url et renvoyer le lien en broadcast emit
 	socket.on('video', function (url) {
-		if(url.includes('www'))url = url.split('v=')[1];
-		if(url.includes('&'))url= url.split('&')[0];
-		io.to(room).emit('video', url);
+		if(url.includes('youtu') || url.length == 11){
+			if(url.includes('/'))url = url.split('/')[url.split('/').length-1];
+			if(url.includes('v='))url= url.split('v=')[1];
+			if(url.includes('&'))url= url.split('&')[0];
+			io.to(room).emit('video', url);
+		}
 	});
 
 	socket.on('disconnect',function(){
