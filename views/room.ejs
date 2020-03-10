@@ -1,59 +1,90 @@
 <%- include('partials/head')%>
 <!-- recuperer l'id de la room ici pour creer une room io -->
-<h2 class="ui centered grid" style="color:#fff	">Bienvenue sur la room <%=room%></h2><br>
-<hr>
-<div class="field">
-	<div class="ui red label">
-		<label class='white' for="music">Lien youtube</label>
+<div class="ui grid">
+	<div class="row">
+		<div class="twelve wide column">
+			<h2 class="ui centered grid" style="color:#fff	">Bienvenue sur la room <%=room%></h2><br>
+			<hr>
+			<div class="field">
+				<div class="ui red label">
+					<label class='white' for="music">Lien youtube</label>
+				</div>
+			</div>
+			<div class="ui input">
+				<input type="text" name="music" id="music">
+			</div>
+			<button class="ui red button" id="ebfei">Lancer une playlist</button>
+			<hr><br>
+			<center><input type="range" min="0" max="100" step="1" style="padding:0;margin-bottom:16px;" id="sliderJs">
+			</center>
+			<div class="ui centered grid" id="containPlayer">
+				<div id="blbl">
+				</div>
+			</div>
+		</div>
+		<div class="four wide column" id="room-chat">
+			<ul id="chat-space"></ul>
+			<div id="input-chat" class='row ui grid'>
+				<div class="sixteen wide column ui large inverted input" style="padding-left:0.7rem">
+					<hr style="color:#54c8ff">
+					<input type="text" id="messageContent">
+					<button class="ui inverted red large button" id="sendBtn">Envoyer</button>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
-<div class="ui input">
-	<input type="text" name="music" id="music">
-</div>
-<button class="ui red button" id="ebfei">Lancer une playlist</button>
-<hr><br>
-<center><input type="range" min="0" max="100" step="1" style="padding:0;margin-bottom:16px;" id="sliderJs"></center>
-<div class="ui centered grid" id="containPlayer">
-	<div id="blbl">
-	</div>
-</div>
+
 <script>
 
-	setTimeout(() => {
+	let playlist = [];
+	var player;
 
-
-		let playlist = [];
-		var player;
-
-
-		function onYouTubeIframeAPIReady() {
-
+	document.getElementById('messageContent').addEventListener('keyup', (e) => {
+		if (e.keyCode == 13) {
+			sendMessage();
 		}
+	});
+	document.getElementById('sendBtn').addEventListener('click', () => {
+		sendMessage();
+	});
+
+	function sendMessage() {
+		//gérer si connecté ou pas pour le pseudo
+		let message = document.getElementById('messageContent').value;
+		socket.emit('message', { pseudo: socket.id, content: message });
+		document.getElementById('messageContent').value = "";
+	}
 
 
-		// 4. The API will call this function when the video player is ready.
-		function onPlayerReady(event) {
-			event.target.playVideo();
-		}
+	function onYouTubeIframeAPIReady() {
 
-		var done = false;
-		function onPlayerStateChange(event) {
-			if (event.data == YT.PlayerState.ENDED) {
-				if (playlist.length) {
-					player.loadVideoById(playlist[0]);
-					playlist.shift();
-				} else {
-					div = document.createElement('div');
-					div.id = "blbl";
-					document.getElementById('containPlayer').removeChild(document.getElementById('blbl'));
-					document.getElementById('containPlayer').appendChild(div);
-					player = undefined;
-				}
+	}
+
+
+	// 4. The API will call this function when the video player is ready.
+	function onPlayerReady(event) {
+		event.target.playVideo();
+	}
+
+	var done = false;
+	function onPlayerStateChange(event) {
+		if (event.data == YT.PlayerState.ENDED) {
+			if (playlist.length) {
+				player.loadVideoById(playlist[0]);
+				playlist.shift();
+			} else {
+				div = document.createElement('div');
+				div.id = "blbl";
+				document.getElementById('containPlayer').removeChild(document.getElementById('blbl'));
+				document.getElementById('containPlayer').appendChild(div);
+				player = undefined;
 			}
 		}
-		function stopVideo() {
-			player.stopVideo();
-		}
+	}
+	function stopVideo() {
+		player.stopVideo();
+	}
 
 		//socket part
 		let socket = io('', { query: "room=" + "<%=room%>" });
@@ -93,7 +124,6 @@
 						}
 					});
 				})
-			} else {
 			}
 		})
 
@@ -116,19 +146,26 @@
 			}
 		});
 
-
-		$('#sliderJs').rangeslider({
-			rangeClass: 'rangeslider',
-			horizontalClass: 'rangeslider--horizontal'
+		socket.on('message', function (object) {
+			let pseudo = object.pseudo;
+			let message = object.content;
+			$('#chat-space').append($('<li>').html('<span id="pseudo">'+ pseudo + ': ' + '</span>' + message));
 		});
+
+
+		setTimeout(()=>{
+
+			$('#sliderJs').rangeslider({
+				rangeClass: 'rangeslider',
+				horizontalClass: 'rangeslider--horizontal'
+			});
+		},1000);
 		document.getElementById('sliderJs').addEventListener('change', (e) => {
 			value = document.getElementById('sliderJs').value;
 			if (player) {
 				player.setVolume(value);
 			}
 		});
-
-	}, 1500);
 
 </script>
 

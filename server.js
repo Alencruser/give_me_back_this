@@ -53,6 +53,10 @@ io.on('connection', (socket) => {
 		}
 	});
 
+	socket.on('message', function(object){
+		io.to(room).emit('message', object);
+	});
+
 	socket.on('disconnect',function(){
 		socket.leave(room);
 	})

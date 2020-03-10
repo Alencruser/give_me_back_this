@@ -5,3 +5,26 @@ body {
 #blbl {
 	pointer-events: none;
 }
+
+#room-chat {
+	border-left: 1px #54c8ff solid;
+	height:calc(100vh - 17vh);
+}
+
+#input-chat {
+	position: absolute;
+	bottom:0;
+}
+
+#chat-space {
+	list-style-type: none;
+}
+
+#chat-space > li {
+	margin-left: -2rem;
+	color:white;
+}
+
+#pseudo {
+	color:#54c8ff;
+}
