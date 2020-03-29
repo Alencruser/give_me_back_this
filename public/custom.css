@@ -28,3 +28,7 @@ body {
 #pseudo {
 	color:#54c8ff;
 }
+
+#controls{
+	display: flex;
+}
