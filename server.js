@@ -9,7 +9,7 @@ let express = require('express'),
 	io = require('socket.io')(http),
 	bcrypt = require('bcrypt'),
 	connection,
-	message = ["", "",""];
+	message = ["", "", ""];
 if (fs.existsSync('./bdd.js')) {
 	connection = require('./bdd');
 } else {
@@ -40,24 +40,25 @@ io.on('connection', (socket) => {
 	let room = socket.handshake['query']['room'];
 	socket.join(room);
 	io.to(room).emit('join');
-	socket.on('join',function (player){
-		io.to(room).emit('player',player.player,player.list);
+	socket.on('join', function (object) {
+		io.to(room).emit('player', object.player.g.g.videoId,object.player.playerInfo.currentTime, object.list);
 	})
 	//ici socket on l'event d'envoyer une url et renvoyer le lien en broadcast emit
 	socket.on('video', function (url) {
-		if(url.includes('youtu') || url.length == 11){
-			if(url.includes('/'))url = url.split('/')[url.split('/').length-1];
-			if(url.includes('v='))url= url.split('v=')[1];
-			if(url.includes('&'))url= url.split('&')[0];
+		if (url.includes('youtu') || url.length == 11) {
+			if (url.includes('/')) url = url.split('/')[url.split('/').length - 1];
+			if (url.includes('v=')) url = url.split('v=')[1];
+			if (url.includes('&')) url = url.split('&')[0];
 			io.to(room).emit('video', url);
 		}
 	});
 
-	socket.on('message', function(object){
+
+	socket.on('message', function (object) {
 		io.to(room).emit('message', object);
 	});
 
-	socket.on('disconnect',function(){
+	socket.on('disconnect', function () {
 		socket.leave(room);
 	})
 });
@@ -158,11 +159,11 @@ app.post('/connect', (req, res) => {
 		} else {
 			bcrypt.compare(pass, results[0].pass, (err, result) => {
 				if (result) {
-					message = ['success',"Vous vous êtes connecté avec succès"];
+					message = ['success', "Vous vous êtes connecté avec succès"];
 					sess.username = username;
 					res.redirect('/');
 				} else {
-					message = ['negative','Mot de passe incorrect'];
+					message = ['negative', 'Mot de passe incorrect'];
 					res.redirect('/')
 				}
 			})
@@ -183,10 +184,11 @@ app.get('/logout', (req, res) => {
 //creer une room io personnalisée ici
 app.get('/room/:id', (req, res) => {
 	sess = req.session;
-	if (session.username) {
+	if (sess.username) {
 		res.render('room', { username: sess.username, room: req.params.id });
+	} else {
+		res.render('room', { room: req.params.id });
 	}
-	res.render('room', { room: req.params.id });
 });
 
 
