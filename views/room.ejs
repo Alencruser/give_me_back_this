@@ -20,7 +20,8 @@
 				<div style="margin-left:15vw">
 
 					<input type="range" min="0" max="100" step="1" style="padding:0;" id="sliderJs">
-					<button class="ui button" id="fullscreen">Fu</button>
+					<i id="fullscreen" title="Plein écran" class="fas fa-expand-alt"></i>
+					<!-- <button class="ui button" id="fullscreen">Fu</button> -->
 				</div>
 			</div>
 			<hr><br>
@@ -42,10 +43,15 @@
 		</div>
 	</div>
 </div>
-
 <script>
 
-	let playlist = [];
+	let pseudo = "";
+<% if (locals.username) {%>
+		pseudo = "<%=username%>"
+			<%}%>
+
+
+				let playlist = [];
 	var player;
 
 	document.getElementById('messageContent').addEventListener('keyup', (e) => {
@@ -57,30 +63,29 @@
 		sendMessage();
 	});
 
-	document.getElementById('fullscreen').addEventListener('click',() => {
-		if(player){
-			console.log('1')
+	document.getElementById('fullscreen').addEventListener('click', () => {
+		if (player) {
 			let screen = document.getElementById('blbl');
-			console.log(screen.style.width)
-			if(!screen.style.width || screen.style.width != "67vw"){
-				console.log('2')
+			if (!screen.style.width || screen.style.width != "67vw") {
 				screen.style.width = "67vw";
 				screen.style.height = "75vh";
 			} else {
-				console.log('3')
 				screen.style.width = '620px';
 				screen.style.height = "360px";
 			}
-		}else {
-			console.log('zeiofb')
 		}
 	});
 
 	function sendMessage() {
 		//gérer si connecté ou pas pour le pseudo
-		let message = document.getElementById('messageContent').value;
-		socket.emit('message', { pseudo: socket.id, content: message });
-		document.getElementById('messageContent').value = "";
+		if (document.getElementById('messageContent').value.length) {
+			let message = document.getElementById('messageContent').value;
+			if (!pseudo.length) pseudo = socket.id;
+			if (message.replace(/ /g, '').length) {
+				socket.emit('message', { pseudo: pseudo, content: message });
+			}
+			document.getElementById('messageContent').value = "";
+		}
 	}
 
 	//When then script is ready
@@ -130,7 +135,7 @@
 		}
 	});
 
-	socket.on('player', function (videoId,currentTime, list) {
+	socket.on('player', function (videoId, currentTime, list) {
 		if (!player) {
 			playlist = list;
 			setTimeout(() => {
@@ -192,6 +197,7 @@
 			player.setVolume(value);
 		}
 	});
+
 
 </script>
 
