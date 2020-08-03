@@ -40,3 +40,7 @@ body {
 	margin-left: 18px;
 	margin-bottom:4px;
 }
+#fullscreen svg {
+    margin-bottom: 5px ;
+    margin-left: 5px;
+}

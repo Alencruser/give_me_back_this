@@ -19,8 +19,10 @@
 				</div>
 				<div style="margin-left:15vw">
 
+					<div id="fullscreen">
 					<input type="range" min="0" max="100" step="1" style="padding:0;" id="sliderJs">
-					<i id="fullscreen" title="Plein écran" class="fas fa-expand-alt"></i>
+						<i title="Plein écran" class="fas fa-expand-alt"></i>
+					</div>
 					<!-- <button class="ui button" id="fullscreen">Fu</button> -->
 				</div>
 			</div>
@@ -63,17 +65,25 @@
 		sendMessage();
 	});
 
-	document.getElementById('fullscreen').addEventListener('click', () => {
+	function fullscreened(){
 		if (player) {
+			console.log('player apres')
 			let screen = document.getElementById('blbl');
 			if (!screen.style.width || screen.style.width != "67vw") {
+				console.log('eziufbezb')
 				screen.style.width = "67vw";
 				screen.style.height = "75vh";
 			} else {
+				console.log('non')
 				screen.style.width = '620px';
 				screen.style.height = "360px";
 			}
 		}
+	}
+
+	document.getElementById('fullscreen').addEventListener('click', () => {
+		console.log('player avant')
+		fullscreened();
 	});
 
 	function sendMessage() {
