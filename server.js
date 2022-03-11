@@ -19,9 +19,7 @@ if (fs.existsSync('./bdd.js')) {
 		password: process.env.ENV_PASS,
 		database: process.env.ENV_DB
 	});
-
 }
-
 //stock date here 
 let rooms = [];
 //app use of express session
@@ -87,35 +85,29 @@ function blbl(str) {
 app.get('/', (req, res) => {
 	sess = req.session;
 	let getRooms = "SELECT * FROM rooms";
-	if(connection){
-		connection.query(getRooms, (error, results, fields) => {
-			if (error) {
-				console.log(error);
-				message = ['negative', 'Problème pour la récupération de rooms'];
-				res.render('index', { message: message, test:connection })
-			} else if (results.length > 0) {
-	
-				results.forEach((bl) => {
-					rooms.push(bl.created_at);
-				})
-				if (sess.username) {
-					res.render('index', { rooms: results, username: sess.username, message: message });
-				} else {
-					res.render('index', { rooms: results, message: message });
-				}
+	connection.query(getRooms, (error, results, fields) => {
+		if (error) {
+			console.log(error);
+			message = ['negative', 'Problème pour la récupération de rooms'];
+			res.render('index', { message: message })
+		} else if (results.length > 0) {
+
+			results.forEach((bl) => {
+				rooms.push(bl.created_at);
+			})
+			if (sess.username) {
+				res.render('index', { rooms: results, username: sess.username, message: message });
 			} else {
-				if (sess.username) {
-					res.render('index', { username: sess.username, message: message });
-				} else {
-					res.render('index', { message: message });
-				}
+				res.render('index', { rooms: results, message: message });
 			}
-		});
-	}
-	else {
-		message = ['negative', 'Problème pour la récupération de rooms'];
-		res.render('index', { message: message, test:connection })
-	}
+		} else {
+			if (sess.username) {
+				res.render('index', { username: sess.username, message: message });
+			} else {
+				res.render('index', { message: message });
+			}
+		}
+	});
 });
 //Create a room
 app.post('/', (req, res) => {
